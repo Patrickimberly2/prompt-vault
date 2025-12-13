@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Browse", href: "/browse", icon: Compass },
-  { label: "Collections", href: "/collections", icon: Library },
+  { label: "Bibles", href: "/collections", icon: Library },
   { label: "AI Tools", href: "/ai-tools", icon: Wrench },
   { label: "Learning", href: "/learning", icon: GraduationCap },
   { label: "Workspace", href: "/workspace", icon: FolderOpen },
