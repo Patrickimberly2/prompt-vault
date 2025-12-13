@@ -1,41 +1,41 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Sparkles, Briefcase, Target, ArrowRight } from "lucide-react";
+import { Briefcase, Target, TrendingUp, PenTool, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const collections = [
   {
-    id: "ultimate-bible",
-    name: "The Ultimate ChatGPT",
-    description: "The most comprehensive collection of ChatGPT prompts for any use case",
+    id: "business-vault",
+    name: "Business Vault",
+    description: "Master business strategy, operations, and planning with AI-powered prompts",
     promptCount: 2500,
-    icon: BookOpen,
+    icon: Briefcase,
     gradient: "from-primary to-accent",
     bgGlow: "bg-primary/20",
   },
   {
-    id: "personal-growth",
-    name: "Personal Growth",
-    description: "Transform your life with AI-powered self-improvement prompts",
+    id: "marketing-vault",
+    name: "Marketing Vault",
+    description: "Dominate marketing & advertising with conversion-focused AI prompts",
     promptCount: 1800,
-    icon: Sparkles,
+    icon: Target,
     gradient: "from-collection-growth to-primary",
     bgGlow: "bg-collection-growth/20",
   },
   {
-    id: "business-bible",
-    name: "Business Owner's",
-    description: "Scale your business with proven AI strategies and prompts",
+    id: "sales-vault",
+    name: "Sales Vault",
+    description: "Close more deals with AI prompts for sales, lead gen, and outreach",
     promptCount: 2200,
-    icon: Briefcase,
+    icon: TrendingUp,
     gradient: "from-accent to-collection-business",
     bgGlow: "bg-accent/20",
   },
   {
-    id: "coach-bible",
-    name: "Coach's",
-    description: "Master coaching and mentorship with powerful AI prompts",
+    id: "content-vault",
+    name: "Content Creation Vault",
+    description: "Create compelling content for social media, blogs, and beyond",
     promptCount: 1500,
-    icon: Target,
+    icon: PenTool,
     gradient: "from-collection-coach to-primary",
     bgGlow: "bg-collection-coach/20",
   },
@@ -47,10 +47,10 @@ export function FeaturedCollections() {
       <div className="container px-4">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Featured <span className="gradient-text">Prompt Bibles</span>
+            Featured <span className="gradient-text">Prompt Vaults</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Explore our expertly curated Bible guides, each packed with thousands of prompts for specific goals
+            Explore our expertly curated Vaults, each packed with thousands of prompts for specific goals
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export function FeaturedCollections() {
         <div className="mt-8 text-center">
           <Button asChild variant="outline" size="lg">
             <Link to="/collections">
-              View All Bibles
+              View All Vaults
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

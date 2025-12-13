@@ -164,7 +164,7 @@ const Workspace = () => {
               </TabsTrigger>
               <TabsTrigger value="collections" className="gap-2">
                 <Star className="h-4 w-4" />
-                My Bibles
+                My Vaults
               </TabsTrigger>
             </TabsList>
 
@@ -214,13 +214,13 @@ const Workspace = () => {
             <TabsContent value="collections" className="space-y-6">
               <div className="rounded-xl border border-dashed border-border/50 bg-card/30 p-12 text-center">
                 <FolderOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                <h3 className="mb-2 text-lg font-semibold">Create a Bible</h3>
+                <h3 className="mb-2 text-lg font-semibold">Create a Vault</h3>
                 <p className="mb-4 text-muted-foreground">
-                  Organize your prompts into custom Bibles
+                  Organize your prompts into custom Vaults
                 </p>
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
-                  New Bible
+                  New Vault
                 </Button>
               </div>
             </TabsContent>

@@ -1,47 +1,47 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Sparkles, Briefcase, Target, ArrowRight, TrendingUp } from "lucide-react";
+import { Briefcase, Target, TrendingUp, PenTool, ArrowRight, Vault } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 
 const collections = [
   {
-    id: "ultimate-bible",
-    name: "The Ultimate ChatGPT",
-    description: "The most comprehensive collection of ChatGPT prompts covering every use case imaginable. From business to creative writing, marketing to coding - this collection has it all.",
+    id: "business-vault",
+    name: "Business Vault",
+    description: "Master business strategy, operations, planning, and entrepreneurship with AI-powered prompts. From startup ideation to enterprise scaling, find prompts for every stage of your business journey.",
     promptCount: 2500,
-    categories: ["Marketing", "Business", "Creative", "Technical", "Personal"],
-    icon: BookOpen,
+    categories: ["Strategy", "Operations", "Planning", "Finance", "HR"],
+    icon: Briefcase,
     gradient: "from-primary to-accent",
     bgGlow: "bg-primary/30",
   },
   {
-    id: "personal-growth",
-    name: "Personal Growth",
-    description: "Transform every aspect of your life with AI-powered prompts for self-improvement, goal setting, habit building, and personal development journeys.",
+    id: "marketing-vault",
+    name: "Marketing Vault",
+    description: "Dominate marketing and advertising with conversion-focused AI prompts. Master SEO, content strategy, paid ads, email marketing, and brand building.",
     promptCount: 1800,
-    categories: ["Mindset", "Goals", "Habits", "Wellness", "Productivity"],
-    icon: Sparkles,
+    categories: ["SEO", "Ads", "Email", "Branding", "Analytics"],
+    icon: Target,
     gradient: "from-collection-growth to-primary",
     bgGlow: "bg-collection-growth/30",
   },
   {
-    id: "business-bible",
-    name: "Business Owner's",
-    description: "Scale your business with proven AI strategies. From startup ideation to enterprise growth, find prompts for every stage of your business journey.",
+    id: "sales-vault",
+    name: "Sales Vault",
+    description: "Close more deals with AI prompts for sales, lead generation, outreach, and customer relationships. From prospecting to negotiation, supercharge your sales process.",
     promptCount: 2200,
-    categories: ["Strategy", "Marketing", "Sales", "Operations", "Finance"],
-    icon: Briefcase,
+    categories: ["Lead Gen", "Outreach", "Negotiation", "CRM", "Closing"],
+    icon: TrendingUp,
     gradient: "from-accent to-collection-business",
     bgGlow: "bg-accent/30",
   },
   {
-    id: "coach-bible",
-    name: "Coach's",
-    description: "Master the art of coaching and mentorship with prompts designed for life coaches, business coaches, and mentors who want to make a lasting impact.",
+    id: "content-vault",
+    name: "Content Creation Vault",
+    description: "Create compelling content for social media, blogs, videos, and beyond. Master copywriting, storytelling, and content strategy across every platform.",
     promptCount: 1500,
-    categories: ["Life Coaching", "Business Coaching", "Mentorship", "Leadership", "Communication"],
-    icon: Target,
+    categories: ["Social Media", "Blogging", "Copywriting", "Video", "Storytelling"],
+    icon: PenTool,
     gradient: "from-collection-coach to-primary",
     bgGlow: "bg-collection-coach/30",
   },
@@ -62,10 +62,10 @@ const Collections = () => {
 
           <div className="container px-4 text-center">
             <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">
-              Curated <span className="gradient-text">Prompt Bibles</span>
+              Curated <span className="gradient-text">Prompt Vaults</span>
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-              Explore our expertly curated Bible guides, each containing thousands of prompts 
+              Explore our expertly curated Vaults, each containing thousands of prompts 
               designed to help you achieve specific goals and master different domains.
             </p>
             <div className="flex items-center justify-center gap-8 text-sm">
@@ -74,8 +74,8 @@ const Collections = () => {
                 <span><strong>8,000+</strong> Total Prompts</span>
               </div>
               <div className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-accent" />
-                <span><strong>4</strong> Bible Guides</span>
+                <Briefcase className="h-5 w-5 text-accent" />
+                <span><strong>4</strong> Vaults</span>
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ const Collections = () => {
                         {collection.promptCount.toLocaleString()}+ prompts
                       </span>
                       <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                        Explore Bible
+                        Explore Vault
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </div>
