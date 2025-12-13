@@ -1,18 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, BookOpen, Compass, GraduationCap, Sparkles, FolderOpen, Menu } from "lucide-react";
+import { Search, Compass, GraduationCap, Sparkles, FolderOpen, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 
 const navItems = [
-  { label: "Collections", href: "/collections", icon: BookOpen },
   { label: "Browse", href: "/browse", icon: Compass },
   { label: "Learning", href: "/learning", icon: GraduationCap },
   { label: "AI Partners", href: "/ai-partners", icon: Sparkles },

@@ -93,10 +93,10 @@ const PromptDetail = () => {
             </Link>
             <ChevronRight className="h-4 w-4" />
             <Link 
-              to={`/collections/${prompt.collection}`} 
+              to={`/browse?category=${prompt.category.toLowerCase().replace(/\s+/g, '-')}`} 
               className="hover:text-primary transition-colors"
             >
-              {prompt.collection.replace("-", " ")}
+              {prompt.category}
             </Link>
             <ChevronRight className="h-4 w-4" />
             <span className="text-foreground">{prompt.title}</span>

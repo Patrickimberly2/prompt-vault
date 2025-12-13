@@ -1,4 +1,4 @@
-import { Search, Sparkles, TrendingUp, Users } from "lucide-react";
+import { Search, TrendingUp, Users, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -59,8 +59,8 @@ export function HeroSection() {
           {/* Stats */}
           <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-collection-chatgpt/20">
-                <TrendingUp className="h-5 w-5 text-collection-chatgpt" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
+                <TrendingUp className="h-5 w-5 text-primary" />
               </div>
               <div className="text-left">
                 <div className="font-semibold">2,000+</div>
@@ -68,20 +68,11 @@ export function HeroSection() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
-                <Sparkles className="h-5 w-5 text-primary" />
-              </div>
-              <div className="text-left">
-                <div className="font-semibold">5</div>
-                <div className="text-muted-foreground">Collections</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20">
                 <Users className="h-5 w-5 text-accent" />
               </div>
               <div className="text-left">
-                <div className="font-semibold">93+</div>
+                <div className="font-semibold">20</div>
                 <div className="text-muted-foreground">Categories</div>
               </div>
             </div>

@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Compass, GraduationCap, Sparkles, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const footerLinks = {
   product: [
-    { label: "Collections", href: "/collections" },
     { label: "Browse", href: "/browse" },
     { label: "Learning", href: "/learning" },
     { label: "AI Partners", href: "/ai-partners" },
+    { label: "My Workspace", href: "/workspace" },
   ],
-  collections: [
-    { label: "ChatGPT Bible", href: "/collections/chatgpt-bible" },
-    { label: "Marketer's Bible", href: "/collections/marketer-bible" },
-    { label: "Business Bible", href: "/collections/business-bible" },
-    { label: "Coach's Bible", href: "/collections/coach-bible" },
+  categories: [
+    { label: "Marketing & Advertising", href: "/browse?category=marketing-advertising" },
+    { label: "Business Strategy", href: "/browse?category=business-strategy" },
+    { label: "Coding & Engineering", href: "/browse?category=coding-engineering" },
+    { label: "Creative Writing", href: "/browse?category=creative-writing" },
   ],
   resources: [
     { label: "Getting Started", href: "/learning/getting-started" },
@@ -39,7 +39,7 @@ export function Footer() {
             </Link>
             <p className="text-muted-foreground max-w-sm mb-6">
               Your ultimate AI prompt library. Unlock the power of AI with 2,000+ 
-              expertly crafted prompts across 5 comprehensive collections.
+              expertly crafted prompts across 20 functional categories.
             </p>
             <div className="flex items-center gap-4">
               <a
@@ -70,9 +70,9 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Collections</h3>
+            <h3 className="font-semibold mb-4">Categories</h3>
             <ul className="space-y-3">
-              {footerLinks.collections.map((link) => (
+              {footerLinks.categories.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
