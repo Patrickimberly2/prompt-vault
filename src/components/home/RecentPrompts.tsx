@@ -87,11 +87,9 @@ export function RecentPrompts() {
 
               {/* Footer */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>{prompt.category}</span>
-                  <span>•</span>
-                  <span>{prompt.collection.replace("-", " ")}</span>
-                </div>
+                <span className="text-xs text-muted-foreground">
+                  {prompt.category}
+                </span>
                 <Button
                   size="sm"
                   variant="ghost"

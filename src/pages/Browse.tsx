@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/collapsible";
 import { 
   samplePrompts, 
-  collections, 
   categories, 
   formatTypes, 
   aiModels, 
@@ -50,7 +49,6 @@ const Browse = () => {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<{
-    collections: string[];
     categories: string[];
     formats: string[];
     models: string[];
@@ -58,7 +56,6 @@ const Browse = () => {
     priorities: string[];
     statuses: string[];
   }>({
-    collections: [],
     categories: searchParams.get("category") ? [searchParams.get("category")!] : [],
     formats: [],
     models: [],
@@ -85,7 +82,6 @@ const Browse = () => {
 
   const clearFilters = () => {
     setSelectedFilters({
-      collections: [],
       categories: [],
       formats: [],
       models: [],
@@ -148,13 +144,6 @@ const Browse = () => {
         title="Categories"
         items={categories.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
         type="categories"
-        showIcon
-      />
-
-      <FilterSection
-        title="Collections"
-        items={collections.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
-        type="collections"
         showIcon
       />
 
