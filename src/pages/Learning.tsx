@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { 
   BookOpen, 
   Play, 
@@ -46,6 +47,36 @@ const Learning = () => {
               effective prompts and unlock the full potential of AI.
             </p>
           </div>
+
+          {/* 28-Day Challenge Banner */}
+          <Link to="/challenge" className="block mb-8 group">
+            <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/20 via-primary/10 to-background p-6 md:p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-colors">
+                    <Zap className="h-7 w-7 text-primary" />
+                  </div>
+                  <div>
+                    <Badge className="mb-2 bg-primary text-primary-foreground">
+                      New Challenge
+                    </Badge>
+                    <h2 className="text-2xl font-bold group-hover:text-primary transition-colors">
+                      28-Day ChatGPT Mastery Challenge
+                    </h2>
+                    <p className="text-muted-foreground mt-1">
+                      Master AI in 4 weeks • 100+ topics • Business, Marketing & Content
+                    </p>
+                  </div>
+                </div>
+                <Button size="lg" className="gap-2 group-hover:bg-primary/90">
+                  <Play className="h-4 w-4" />
+                  Start Challenge
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </div>
+            </div>
+          </Link>
 
           {/* Featured Course */}
           <div className="mb-16">
