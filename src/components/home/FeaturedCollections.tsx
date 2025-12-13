@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 const collections = [
   {
     id: "ultimate-bible",
-    name: "The Ultimate ChatGPT Bible",
+    name: "The Ultimate ChatGPT",
     description: "The most comprehensive collection of ChatGPT prompts for any use case",
     promptCount: 2500,
     icon: BookOpen,
@@ -14,7 +14,7 @@ const collections = [
   },
   {
     id: "personal-growth",
-    name: "Personal Growth Bible",
+    name: "Personal Growth",
     description: "Transform your life with AI-powered self-improvement prompts",
     promptCount: 1800,
     icon: Sparkles,
@@ -23,7 +23,7 @@ const collections = [
   },
   {
     id: "business-bible",
-    name: "Business Owner's Bible",
+    name: "Business Owner's",
     description: "Scale your business with proven AI strategies and prompts",
     promptCount: 2200,
     icon: Briefcase,
@@ -32,7 +32,7 @@ const collections = [
   },
   {
     id: "coach-bible",
-    name: "Coach's Bible",
+    name: "Coach's",
     description: "Master coaching and mentorship with powerful AI prompts",
     promptCount: 1500,
     icon: Target,
