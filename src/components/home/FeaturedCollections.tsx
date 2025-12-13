@@ -47,10 +47,10 @@ export function FeaturedCollections() {
       <div className="container px-4">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Curated <span className="gradient-text">Prompt Collections</span>
+            Featured <span className="gradient-text">Prompt Bibles</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Explore our expertly curated Bible collections, each packed with thousands of prompts for specific goals
+            Explore our expertly curated Bible guides, each packed with thousands of prompts for specific goals
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export function FeaturedCollections() {
         <div className="mt-8 text-center">
           <Button asChild variant="outline" size="lg">
             <Link to="/collections">
-              View All Collections
+              View All Bibles
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

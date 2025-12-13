@@ -62,10 +62,10 @@ const Collections = () => {
 
           <div className="container px-4 text-center">
             <h1 className="mb-6 text-4xl font-bold md:text-5xl lg:text-6xl">
-              Curated <span className="gradient-text">Prompt Collections</span>
+              Curated <span className="gradient-text">Prompt Bibles</span>
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-              Explore our expertly curated Bible collections, each containing thousands of prompts 
+              Explore our expertly curated Bible guides, each containing thousands of prompts 
               designed to help you achieve specific goals and master different domains.
             </p>
             <div className="flex items-center justify-center gap-8 text-sm">
@@ -75,7 +75,7 @@ const Collections = () => {
               </div>
               <div className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-accent" />
-                <span><strong>4</strong> Bible Collections</span>
+                <span><strong>4</strong> Bible Guides</span>
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ const Collections = () => {
                         {collection.promptCount.toLocaleString()}+ prompts
                       </span>
                       <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                        Explore Collection
+                        Explore Bible
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </div>
