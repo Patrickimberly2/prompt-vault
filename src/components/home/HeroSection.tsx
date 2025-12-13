@@ -100,7 +100,7 @@ export function HeroSection() {
                 <Library className="h-5 w-5 text-collection-coach" />
               </div>
               <div className="text-left">
-                <div className="font-semibold">4</div>
+                <div className="font-semibold">6</div>
                 <div className="text-muted-foreground">Vaults</div>
               </div>
             </div>

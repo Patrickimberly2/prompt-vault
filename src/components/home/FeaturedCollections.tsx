@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Briefcase, Target, TrendingUp, PenTool, ArrowRight } from "lucide-react";
+import { Briefcase, Target, TrendingUp, PenTool, ArrowRight, Users, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const collections = [
@@ -39,6 +39,24 @@ const collections = [
     gradient: "from-collection-coach to-primary",
     bgGlow: "bg-collection-coach/20",
   },
+  {
+    id: "coaching-vault",
+    name: "Coaching Vault",
+    description: "Transform clients & grow your coaching business with proven frameworks",
+    promptCount: 1800,
+    icon: Users,
+    gradient: "from-primary to-collection-growth",
+    bgGlow: "bg-primary/20",
+  },
+  {
+    id: "personal-growth-vault",
+    name: "Personal Growth Vault",
+    description: "Level up your life with prompts for goals, habits, mindset & wellness",
+    promptCount: 1600,
+    icon: Sprout,
+    gradient: "from-collection-growth to-accent",
+    bgGlow: "bg-collection-growth/20",
+  },
 ];
 
 export function FeaturedCollections() {
@@ -54,7 +72,7 @@ export function FeaturedCollections() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {collections.map((collection) => (
             <Link
               key={collection.id}

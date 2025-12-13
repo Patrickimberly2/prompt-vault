@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Briefcase, Target, TrendingUp, PenTool, ArrowRight, Vault } from "lucide-react";
+import { Briefcase, Target, TrendingUp, PenTool, ArrowRight, Users, Sprout } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,26 @@ const collections = [
     gradient: "from-collection-coach to-primary",
     bgGlow: "bg-collection-coach/30",
   },
+  {
+    id: "coaching-vault",
+    name: "Coaching Vault",
+    description: "Transform clients and grow your coaching business with proven frameworks. Master one-on-one sessions, high-ticket sales, program creation, and client management.",
+    promptCount: 1800,
+    categories: ["One-on-One", "High-Ticket Sales", "Program Creation", "Client Management"],
+    icon: Users,
+    gradient: "from-primary to-collection-growth",
+    bgGlow: "bg-primary/30",
+  },
+  {
+    id: "personal-growth-vault",
+    name: "Personal Growth Vault",
+    description: "Level up your life with prompts for goals, habits, mindset, and wellness. Build better routines, develop powerful habits, and achieve your personal best.",
+    promptCount: 1600,
+    categories: ["Goal Setting", "Habit Building", "Mindset", "Productivity", "Wellness"],
+    icon: Sprout,
+    gradient: "from-collection-growth to-accent",
+    bgGlow: "bg-collection-growth/30",
+  },
 ];
 
 const Collections = () => {
@@ -71,11 +91,11 @@ const Collections = () => {
             <div className="flex items-center justify-center gap-8 text-sm">
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                <span><strong>8,000+</strong> Total Prompts</span>
+                <span><strong>11,400+</strong> Total Prompts</span>
               </div>
               <div className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-accent" />
-                <span><strong>4</strong> Vaults</span>
+                <span><strong>6</strong> Vaults</span>
               </div>
             </div>
           </div>
@@ -84,7 +104,7 @@ const Collections = () => {
         {/* Collections Grid */}
         <section className="py-16">
           <div className="container px-4">
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {collections.map((collection) => (
                 <Link
                   key={collection.id}
