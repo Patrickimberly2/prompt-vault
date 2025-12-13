@@ -4,7 +4,7 @@ import { Mail } from "lucide-react";
 const footerLinks = {
   product: [
     { label: "Browse", href: "/browse" },
-    { label: "Bibles", href: "/collections" },
+    { label: "Vaults", href: "/collections" },
     { label: "Learning", href: "/learning" },
     { label: "AI Tools", href: "/ai-tools" },
     { label: "My Workspace", href: "/workspace" },
@@ -40,7 +40,7 @@ export function Footer() {
             </Link>
             <p className="text-muted-foreground max-w-sm mb-6">
               Your ultimate AI prompt library. Unlock the power of AI with 20,000+ 
-              expertly crafted prompts across 4 Bible guides.
+              expertly crafted prompts across 4 curated Vaults.
             </p>
             <div className="flex items-center gap-4">
               <a

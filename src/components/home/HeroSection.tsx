@@ -101,7 +101,7 @@ export function HeroSection() {
               </div>
               <div className="text-left">
                 <div className="font-semibold">4</div>
-                <div className="text-muted-foreground">Bible Guides</div>
+                <div className="text-muted-foreground">Vaults</div>
               </div>
             </div>
           </div>
