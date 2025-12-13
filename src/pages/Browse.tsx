@@ -108,7 +108,7 @@ const Browse = () => {
         {title}
         <ChevronDown className="h-4 w-4" />
       </CollapsibleTrigger>
-      <CollapsibleContent className="space-y-2 pt-2">
+      <CollapsibleContent className="space-y-2 pt-2 max-h-48 overflow-y-auto">
         {items.map((item) => (
           <label
             key={item.id}
@@ -119,7 +119,7 @@ const Browse = () => {
               onCheckedChange={() => toggleFilter(type, item.id)}
             />
             {showIcon && item.icon && <span>{item.icon}</span>}
-            <span className="flex-1">{item.name}</span>
+            <span className="flex-1 truncate">{item.name}</span>
           </label>
         ))}
       </CollapsibleContent>
@@ -145,16 +145,17 @@ const Browse = () => {
       )}
 
       <FilterSection
-        title="Collections"
-        items={collections.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
-        type="collections"
+        title="Categories"
+        items={categories.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
+        type="categories"
         showIcon
       />
 
       <FilterSection
-        title="Categories"
-        items={categories.map((c) => ({ id: c.id, name: c.name }))}
-        type="categories"
+        title="Collections"
+        items={collections.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
+        type="collections"
+        showIcon
       />
 
       <FilterSection
@@ -199,7 +200,7 @@ const Browse = () => {
           <div className="mb-8">
             <h1 className="mb-2 text-3xl font-bold">Browse Prompts</h1>
             <p className="text-muted-foreground">
-              Discover and filter through 2,000+ AI prompts
+              Discover and filter through 2,000+ AI prompts across {categories.length} functional categories
             </p>
           </div>
 
@@ -241,21 +242,27 @@ const Browse = () => {
           {activeFilterCount > 0 && (
             <div className="mb-6 flex flex-wrap gap-2">
               {Object.entries(selectedFilters).flatMap(([type, values]) =>
-                values.map((value) => (
-                  <Badge
-                    key={`${type}-${value}`}
-                    variant="secondary"
-                    className="gap-1 pr-1"
-                  >
-                    {value}
-                    <button
-                      onClick={() => toggleFilter(type as keyof typeof selectedFilters, value)}
-                      className="ml-1 rounded-full p-0.5 hover:bg-muted"
+                values.map((value) => {
+                  // Find display name for category
+                  const category = categories.find(c => c.id === value);
+                  const displayValue = category ? category.name : value;
+                  
+                  return (
+                    <Badge
+                      key={`${type}-${value}`}
+                      variant="secondary"
+                      className="gap-1 pr-1"
                     >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))
+                      {displayValue}
+                      <button
+                        onClick={() => toggleFilter(type as keyof typeof selectedFilters, value)}
+                        className="ml-1 rounded-full p-0.5 hover:bg-muted"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  );
+                })
               )}
             </div>
           )}
@@ -280,7 +287,7 @@ const Browse = () => {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                {samplePrompts.map((prompt, index) => (
+                {samplePrompts.map((prompt) => (
                   <Link
                     key={prompt.id}
                     to={`/prompts/${prompt.id}`}

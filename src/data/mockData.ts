@@ -31,6 +31,7 @@ export interface Category {
   id: string;
   name: string;
   promptCount: number;
+  icon: string;
   subCategories?: string[];
 }
 
@@ -82,17 +83,148 @@ export const collections: Collection[] = [
   },
 ];
 
+// New functional categories based on prompt content
 export const categories: Category[] = [
-  { id: "career", name: "Career & Professional", promptCount: 156, subCategories: ["Resume", "Interview", "Negotiation", "Networking"] },
-  { id: "exploring", name: "Exploring & Discovery", promptCount: 89, subCategories: ["Research", "Analysis", "Brainstorming"] },
-  { id: "hobby", name: "Hobbies & Interests", promptCount: 124, subCategories: ["Creative", "Sports", "Music", "Art"] },
-  { id: "learning", name: "Learning & Education", promptCount: 203, subCategories: ["Study Tips", "Teaching", "Course Creation"] },
-  { id: "writing", name: "Writing & Content", promptCount: 178, subCategories: ["Copywriting", "Blog Posts", "Social Media", "Scripts"] },
-  { id: "email", name: "Email Marketing", promptCount: 67, subCategories: ["Subject Lines", "Sequences", "Newsletters"] },
-  { id: "seo", name: "SEO & Search", promptCount: 45, subCategories: ["Keywords", "Meta Tags", "Content Strategy"] },
-  { id: "social", name: "Social Media", promptCount: 234, subCategories: ["Facebook", "Instagram", "LinkedIn", "TikTok"] },
-  { id: "sales", name: "Sales & Conversion", promptCount: 189, subCategories: ["Cold Outreach", "Follow-ups", "Closing"] },
-  { id: "strategy", name: "Business Strategy", promptCount: 145, subCategories: ["Growth", "Operations", "Finance"] },
+  { 
+    id: "marketing-advertising", 
+    name: "Marketing & Advertising", 
+    promptCount: 187, 
+    icon: "📢",
+    subCategories: ["Brand Awareness", "Campaigns", "Ads", "Promotions"] 
+  },
+  { 
+    id: "seo-content-strategy", 
+    name: "SEO & Content Strategy", 
+    promptCount: 145, 
+    icon: "🔍",
+    subCategories: ["Keyword Research", "Content Planning", "Analytics", "Optimization"] 
+  },
+  { 
+    id: "email-copywriting", 
+    name: "Email & Copywriting", 
+    promptCount: 134, 
+    icon: "✉️",
+    subCategories: ["Email Campaigns", "Subject Lines", "Sales Copy", "Persuasive Writing"] 
+  },
+  { 
+    id: "social-media", 
+    name: "Social Media Management", 
+    promptCount: 198, 
+    icon: "📱",
+    subCategories: ["Platform Content", "Community Engagement", "Posting Strategies", "Analytics"] 
+  },
+  { 
+    id: "business-strategy", 
+    name: "Business Strategy & Planning", 
+    promptCount: 156, 
+    icon: "📊",
+    subCategories: ["Business Models", "SWOT Analysis", "Competitive Analysis", "Growth Planning"] 
+  },
+  { 
+    id: "sales-leads", 
+    name: "Sales & Lead Generation", 
+    promptCount: 167, 
+    icon: "💰",
+    subCategories: ["Sales Scripts", "Lead Nurturing", "Proposals", "Conversion Optimization"] 
+  },
+  { 
+    id: "product-development", 
+    name: "Product Development & Innovation", 
+    promptCount: 89, 
+    icon: "🚀",
+    subCategories: ["MVP Creation", "Product Launches", "Market Research", "Ideation"] 
+  },
+  { 
+    id: "hr-talent", 
+    name: "HR & Talent Management", 
+    promptCount: 112, 
+    icon: "👥",
+    subCategories: ["Hiring", "Job Descriptions", "Performance Reviews", "Employee Communication"] 
+  },
+  { 
+    id: "operations-process", 
+    name: "Operations & Process", 
+    promptCount: 98, 
+    icon: "⚙️",
+    subCategories: ["Workflows", "SOPs", "Project Management", "Resource Allocation"] 
+  },
+  { 
+    id: "finance-budgeting", 
+    name: "Finance & Budgeting", 
+    promptCount: 76, 
+    icon: "💵",
+    subCategories: ["Financial Planning", "Budgets", "Forecasting", "Expense Tracking"] 
+  },
+  { 
+    id: "legal-compliance", 
+    name: "Legal & Compliance", 
+    promptCount: 54, 
+    icon: "⚖️",
+    subCategories: ["Contracts", "Policies", "Terms of Service", "Privacy"] 
+  },
+  { 
+    id: "customer-service", 
+    name: "Customer Service & Support", 
+    promptCount: 123, 
+    icon: "🎧",
+    subCategories: ["FAQs", "Customer Communication", "Retention", "Feedback"] 
+  },
+  { 
+    id: "coding-engineering", 
+    name: "Coding & Engineering", 
+    promptCount: 145, 
+    icon: "💻",
+    subCategories: ["Programming", "Debugging", "Technical Docs", "Architecture"] 
+  },
+  { 
+    id: "creative-writing", 
+    name: "Creative Writing & Storytelling", 
+    promptCount: 134, 
+    icon: "✨",
+    subCategories: ["Fiction", "Poetry", "Character Development", "Narrative"] 
+  },
+  { 
+    id: "professional-writing", 
+    name: "Professional Writing & Communication", 
+    promptCount: 98, 
+    icon: "📝",
+    subCategories: ["Business Writing", "Reports", "Presentations", "Professional Development"] 
+  },
+  { 
+    id: "learning-education", 
+    name: "Learning & Education", 
+    promptCount: 156, 
+    icon: "🎓",
+    subCategories: ["Course Creation", "Lesson Plans", "Teaching Strategies", "Student Engagement"] 
+  },
+  { 
+    id: "personal-development", 
+    name: "Personal Development & Coaching", 
+    promptCount: 145, 
+    icon: "🌟",
+    subCategories: ["Goal Setting", "Self-Improvement", "Life Coaching", "Reflection"] 
+  },
+  { 
+    id: "productivity", 
+    name: "Productivity & Time Management", 
+    promptCount: 87, 
+    icon: "⏱️",
+    subCategories: ["Task Organization", "Calendars", "Efficiency", "Workflows"] 
+  },
+  { 
+    id: "data-research", 
+    name: "Data Analysis & Research", 
+    promptCount: 78, 
+    icon: "📈",
+    subCategories: ["Data Interpretation", "Research Methods", "Insights", "Reporting"] 
+  },
+  { 
+    id: "design-visual", 
+    name: "Design & Visual Content", 
+    promptCount: 118, 
+    icon: "🎨",
+    subCategories: ["Graphic Design", "UI/UX", "Visual Strategy", "Mood Boards"] 
+  },
 ];
 
 export const formatTypes = [
@@ -125,7 +257,7 @@ export const samplePrompts: Prompt[] = [
     id: "1",
     title: "Professional Bio Generator",
     promptText: "Write a compelling professional bio for [NAME], who works as a [JOB_TITLE] at [COMPANY]. Include their [NUMBER] years of experience, key achievements in [INDUSTRY], and their passion for [INTEREST]. The bio should be [WORD_COUNT] words and suitable for [PLATFORM].",
-    category: "Career & Professional",
+    category: "Professional Writing & Communication",
     subCategory: "Personal Branding",
     aiModel: "ChatGPT",
     useCase: "Business",
@@ -142,7 +274,7 @@ export const samplePrompts: Prompt[] = [
     id: "2",
     title: "Email Subject Line Optimizer",
     promptText: "Generate 10 compelling email subject lines for a [INDUSTRY] company promoting [PRODUCT/SERVICE]. The target audience is [AUDIENCE_DESCRIPTION]. Include a mix of: curiosity-driven, benefit-focused, and urgency-based subject lines. Keep each under 50 characters.",
-    category: "Email Marketing",
+    category: "Email & Copywriting",
     subCategory: "Subject Lines",
     aiModel: "ChatGPT",
     useCase: "Marketing",
@@ -158,7 +290,7 @@ export const samplePrompts: Prompt[] = [
     id: "3",
     title: "Business SWOT Analysis",
     promptText: "Conduct a comprehensive SWOT analysis for [COMPANY_NAME], a [BUSINESS_TYPE] operating in [MARKET/LOCATION]. Consider current market trends, competitive landscape, and internal capabilities. Format the analysis with clear sections and actionable insights.",
-    category: "Business Strategy",
+    category: "Business Strategy & Planning",
     subCategory: "Analysis",
     aiModel: "ChatGPT",
     useCase: "Business",
@@ -174,7 +306,7 @@ export const samplePrompts: Prompt[] = [
     id: "4",
     title: "Coaching Session Framework",
     promptText: "Create a structured coaching session outline for a client working on [GOAL]. Include: opening questions to assess current state, exploration prompts for obstacles, action-oriented questions for next steps, and accountability measures. Session duration: [DURATION] minutes.",
-    category: "Coaching",
+    category: "Personal Development & Coaching",
     subCategory: "Session Planning",
     aiModel: "ChatGPT",
     useCase: "Personal",
@@ -190,7 +322,7 @@ export const samplePrompts: Prompt[] = [
     id: "5",
     title: "Daily Reflection Journal Prompts",
     promptText: "What are 3 things I'm grateful for today? What challenge did I overcome and what did it teach me? What's one thing I could have done better? What's my intention for tomorrow?",
-    category: "Personal Growth",
+    category: "Personal Development & Coaching",
     subCategory: "Journaling",
     aiModel: "Universal",
     useCase: "Personal",
@@ -206,7 +338,7 @@ export const samplePrompts: Prompt[] = [
     id: "6",
     title: "LinkedIn Post Generator",
     promptText: "Write a LinkedIn post about [TOPIC] that showcases thought leadership. Use the hook-story-insight framework: Start with an attention-grabbing first line, share a relevant personal experience or case study, and end with actionable takeaways. Include relevant hashtags.",
-    category: "Social Media",
+    category: "Social Media Management",
     subCategory: "LinkedIn",
     aiModel: "ChatGPT",
     useCase: "Marketing",
@@ -222,8 +354,8 @@ export const samplePrompts: Prompt[] = [
     id: "7",
     title: "Product Description Writer",
     promptText: "Write a compelling product description for [PRODUCT_NAME], a [PRODUCT_TYPE] designed for [TARGET_AUDIENCE]. Highlight the key features: [FEATURE_1], [FEATURE_2], [FEATURE_3]. Include benefits, use cases, and a strong call-to-action. Tone: [BRAND_VOICE].",
-    category: "Writing & Content",
-    subCategory: "Copywriting",
+    category: "Email & Copywriting",
+    subCategory: "Sales Copy",
     aiModel: "ChatGPT",
     useCase: "Business",
     status: "active",
@@ -238,8 +370,8 @@ export const samplePrompts: Prompt[] = [
     id: "8",
     title: "SEO Blog Post Outline",
     promptText: "Create a comprehensive blog post outline targeting the keyword [PRIMARY_KEYWORD]. Include: H1 title options, H2 subheadings, key points for each section, internal linking opportunities, and a meta description. Target word count: [WORD_COUNT].",
-    category: "SEO & Search",
-    subCategory: "Content Strategy",
+    category: "SEO & Content Strategy",
+    subCategory: "Content Planning",
     aiModel: "ChatGPT",
     useCase: "Marketing",
     status: "active",
