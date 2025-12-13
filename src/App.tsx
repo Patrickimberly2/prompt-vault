@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import PromptDetail from "./pages/PromptDetail";
 import Learning from "./pages/Learning";
+import Challenge from "./pages/Challenge";
 import Workspace from "./pages/Workspace";
 import AIPartners from "./pages/AIPartners";
 import Auth from "./pages/Auth";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/browse" element={<Browse />} />
             <Route path="/prompts/:id" element={<PromptDetail />} />
             <Route path="/learning" element={<Learning />} />
+            <Route path="/challenge" element={<Challenge />} />
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/ai-partners" element={<AIPartners />} />
             <Route path="/auth" element={<Auth />} />
