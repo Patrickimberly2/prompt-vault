@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { 
   Search, 
@@ -31,37 +31,41 @@ import {
   samplePrompts, 
   categories, 
   formatTypes, 
-  aiModels, 
-  useCases 
+  aiModels,
+  outputTypes,
 } from "@/data/mockData";
 import { toast } from "sonner";
 
 const formatBadgeColors: Record<string, string> = {
   "fill-in-blank": "bg-primary/20 text-primary border-primary/30",
   "question-based": "bg-accent/20 text-accent border-accent/30",
-  "example-based": "bg-collection-chatgpt/20 text-collection-chatgpt border-collection-chatgpt/30",
+  "example-based": "bg-collection-growth/20 text-collection-growth border-collection-growth/30",
 };
 
-const priorities = ["High", "Medium", "Low"];
-const statuses = ["Active", "Draft", "Archived", "Favorite"];
+const ratingOptions = [
+  { id: "5", name: "5 Stars", value: 5 },
+  { id: "4", name: "4+ Stars", value: 4 },
+  { id: "3", name: "3+ Stars", value: 3 },
+];
 
 const Browse = () => {
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState("");
+  const initialSearch = searchParams.get("search") || "";
+  const initialCategory = searchParams.get("category");
+  
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedFilters, setSelectedFilters] = useState<{
     categories: string[];
     formats: string[];
     models: string[];
-    useCases: string[];
-    priorities: string[];
-    statuses: string[];
+    outputTypes: string[];
+    ratings: string[];
   }>({
-    categories: searchParams.get("category") ? [searchParams.get("category")!] : [],
+    categories: initialCategory ? [initialCategory] : [],
     formats: [],
     models: [],
-    useCases: [],
-    priorities: [],
-    statuses: [],
+    outputTypes: [],
+    ratings: [],
   });
 
   const handleCopy = (text: string, e: React.MouseEvent) => {
@@ -85,13 +89,57 @@ const Browse = () => {
       categories: [],
       formats: [],
       models: [],
-      useCases: [],
-      priorities: [],
-      statuses: [],
+      outputTypes: [],
+      ratings: [],
     });
+    setSearchQuery("");
   };
 
   const activeFilterCount = Object.values(selectedFilters).flat().length;
+
+  // Filter prompts based on selected filters
+  const filteredPrompts = useMemo(() => {
+    return samplePrompts.filter((prompt) => {
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = 
+          prompt.title.toLowerCase().includes(query) ||
+          prompt.promptText.toLowerCase().includes(query) ||
+          prompt.category.toLowerCase().includes(query);
+        if (!matchesSearch) return false;
+      }
+
+      // Category filter
+      if (selectedFilters.categories.length > 0) {
+        const categoryId = categories.find(c => c.name === prompt.category)?.id;
+        if (!categoryId || !selectedFilters.categories.includes(categoryId)) return false;
+      }
+
+      // Format filter
+      if (selectedFilters.formats.length > 0) {
+        if (!selectedFilters.formats.includes(prompt.formatType)) return false;
+      }
+
+      // AI Model filter
+      if (selectedFilters.models.length > 0) {
+        if (!selectedFilters.models.includes(prompt.aiModel)) return false;
+      }
+
+      // Output Type filter
+      if (selectedFilters.outputTypes.length > 0) {
+        if (!selectedFilters.outputTypes.includes(prompt.outputType)) return false;
+      }
+
+      // Rating filter
+      if (selectedFilters.ratings.length > 0) {
+        const minRating = Math.min(...selectedFilters.ratings.map(Number));
+        if (prompt.rating < minRating) return false;
+      }
+
+      return true;
+    });
+  }, [searchQuery, selectedFilters]);
 
   const FilterSection = ({ title, items, type, showIcon = false }: {
     title: string;
@@ -124,7 +172,7 @@ const Browse = () => {
 
   const FilterSidebar = () => (
     <div className="space-y-4">
-      {activeFilterCount > 0 && (
+      {(activeFilterCount > 0 || searchQuery) && (
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">
             {activeFilterCount} filter{activeFilterCount !== 1 ? "s" : ""} applied
@@ -141,9 +189,23 @@ const Browse = () => {
       )}
 
       <FilterSection
-        title="Categories"
+        title="Category"
         items={categories.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
         type="categories"
+        showIcon
+      />
+
+      <FilterSection
+        title="Output Type"
+        items={outputTypes.map((o) => ({ id: o.id, name: o.name, icon: o.icon }))}
+        type="outputTypes"
+        showIcon
+      />
+
+      <FilterSection
+        title="AI Tool"
+        items={aiModels.map((m) => ({ id: m.id, name: m.name, icon: m.icon }))}
+        type="models"
         showIcon
       />
 
@@ -154,28 +216,9 @@ const Browse = () => {
       />
 
       <FilterSection
-        title="AI Model"
-        items={aiModels.map((m) => ({ id: m.id, name: m.name, icon: m.icon }))}
-        type="models"
-        showIcon
-      />
-
-      <FilterSection
-        title="Use Case"
-        items={useCases.map((u) => ({ id: u.toLowerCase(), name: u }))}
-        type="useCases"
-      />
-
-      <FilterSection
-        title="Priority"
-        items={priorities.map((p) => ({ id: p.toLowerCase(), name: p }))}
-        type="priorities"
-      />
-
-      <FilterSection
-        title="Status"
-        items={statuses.map((s) => ({ id: s.toLowerCase(), name: s }))}
-        type="statuses"
+        title="Rating"
+        items={ratingOptions.map((r) => ({ id: r.id, name: r.name }))}
+        type="ratings"
       />
     </div>
   );
@@ -187,9 +230,9 @@ const Browse = () => {
         <div className="container px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="mb-2 text-3xl font-bold">Browse Prompts</h1>
+            <h1 className="mb-2 text-3xl font-bold">Browse <span className="gradient-text">Prompts</span></h1>
             <p className="text-muted-foreground">
-              Discover and filter through 2,000+ AI prompts across {categories.length} functional categories
+              Discover and filter through 20,000+ AI prompts across {categories.length} functional categories
             </p>
           </div>
 
@@ -198,7 +241,7 @@ const Browse = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search prompts..."
+                placeholder="Search prompts by title, content, or category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 bg-card border-border/50"
@@ -228,13 +271,35 @@ const Browse = () => {
           </div>
 
           {/* Active Filters */}
-          {activeFilterCount > 0 && (
+          {(activeFilterCount > 0 || searchQuery) && (
             <div className="mb-6 flex flex-wrap gap-2">
+              {searchQuery && (
+                <Badge variant="secondary" className="gap-1 pr-1">
+                  Search: "{searchQuery}"
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="ml-1 rounded-full p-0.5 hover:bg-muted"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
               {Object.entries(selectedFilters).flatMap(([type, values]) =>
                 values.map((value) => {
-                  // Find display name for category
-                  const category = categories.find(c => c.id === value);
-                  const displayValue = category ? category.name : value;
+                  let displayValue = value;
+                  
+                  // Get display name based on filter type
+                  if (type === "categories") {
+                    displayValue = categories.find(c => c.id === value)?.name || value;
+                  } else if (type === "models") {
+                    displayValue = aiModels.find(m => m.id === value)?.name || value;
+                  } else if (type === "outputTypes") {
+                    displayValue = outputTypes.find(o => o.id === value)?.name || value;
+                  } else if (type === "formats") {
+                    displayValue = formatTypes.find(f => f.id === value)?.name || value;
+                  } else if (type === "ratings") {
+                    displayValue = ratingOptions.find(r => r.id === value)?.name || value;
+                  }
                   
                   return (
                     <Badge
@@ -272,71 +337,83 @@ const Browse = () => {
             {/* Prompt Grid */}
             <div className="flex-1">
               <div className="mb-4 text-sm text-muted-foreground">
-                Showing {samplePrompts.length} prompts
+                Showing {filteredPrompts.length} of {samplePrompts.length} prompts
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                {samplePrompts.map((prompt) => (
-                  <Link
-                    key={prompt.id}
-                    to={`/prompts/${prompt.id}`}
-                    className="group rounded-xl border border-border/50 bg-card p-5 transition-all duration-300 hover:border-primary/30 hover:bg-card-hover"
-                  >
-                    {/* Header */}
-                    <div className="mb-3 flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="mb-2 flex flex-wrap items-center gap-2">
-                          <Badge
-                            variant="outline"
-                            className={`text-xs ${formatBadgeColors[prompt.formatType]}`}
-                          >
-                            {prompt.formatType.replace("-", " ")}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {prompt.aiModel}
-                          </Badge>
+              {filteredPrompts.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground mb-4">No prompts found matching your filters</p>
+                  <Button onClick={clearFilters} variant="outline">
+                    Clear all filters
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {filteredPrompts.map((prompt) => (
+                    <Link
+                      key={prompt.id}
+                      to={`/prompts/${prompt.id}`}
+                      className="group rounded-xl border border-border/50 bg-card p-5 transition-all duration-300 hover:border-primary/30 hover:bg-card-hover hover:-translate-y-1"
+                    >
+                      {/* Header */}
+                      <div className="mb-3 flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="mb-2 flex flex-wrap items-center gap-2">
+                            <Badge
+                              variant="outline"
+                              className={`text-xs ${formatBadgeColors[prompt.formatType]}`}
+                            >
+                              {prompt.formatType.replace("-", " ")}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {prompt.aiModel}
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs capitalize">
+                              {prompt.outputType}
+                            </Badge>
+                          </div>
+                          <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
+                            {prompt.title}
+                          </h3>
                         </div>
-                        <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
-                          {prompt.title}
-                        </h3>
+                        <div className="flex items-center gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-3.5 w-3.5 ${
+                                i < prompt.rating
+                                  ? "fill-primary text-primary"
+                                  : "text-muted-foreground/30"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-0.5">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-3.5 w-3.5 ${
-                              i < prompt.rating
-                                ? "fill-primary text-primary"
-                                : "text-muted-foreground"
-                            }`}
-                          />
-                        ))}
+
+                      {/* Preview */}
+                      <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
+                        {prompt.promptText.substring(0, 120)}...
+                      </p>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">
+                          {prompt.category}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => handleCopy(prompt.promptText, e)}
+                        >
+                          <Copy className="h-3 w-3 mr-1" />
+                          Copy
+                        </Button>
                       </div>
-                    </div>
-
-                    {/* Preview */}
-                    <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-                      {prompt.promptText.substring(0, 120)}...
-                    </p>
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        {prompt.category}
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => handleCopy(prompt.promptText, e)}
-                      >
-                        <Copy className="h-3 w-3 mr-1" />
-                        Copy
-                      </Button>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

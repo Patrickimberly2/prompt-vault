@@ -2,7 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { 
   Copy, 
   Star, 
-  ArrowLeft, 
   ChevronRight,
   Tag,
   Layers,
@@ -10,7 +9,10 @@ import {
   Target,
   Flag,
   Clock,
-  FileText
+  FileText,
+  CheckCircle,
+  Lightbulb,
+  ArrowRight
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -18,14 +20,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { samplePrompts } from "@/data/mockData";
+import { samplePrompts, categories } from "@/data/mockData";
 import { toast } from "sonner";
 import { useState } from "react";
 
 const formatBadgeColors: Record<string, string> = {
   "fill-in-blank": "bg-primary/20 text-primary border-primary/30",
   "question-based": "bg-accent/20 text-accent border-accent/30",
-  "example-based": "bg-collection-chatgpt/20 text-collection-chatgpt border-collection-chatgpt/30",
+  "example-based": "bg-collection-growth/20 text-collection-growth border-collection-growth/30",
 };
 
 const priorityColors: Record<string, string> = {
@@ -34,9 +36,18 @@ const priorityColors: Record<string, string> = {
   low: "text-muted-foreground",
 };
 
+const outputTypeIcons: Record<string, string> = {
+  text: "📝",
+  image: "🖼️",
+  video: "🎬",
+  code: "💻",
+  audio: "🎵",
+};
+
 const PromptDetail = () => {
   const { id } = useParams();
   const [notes, setNotes] = useState("");
+  const [copied, setCopied] = useState(false);
   
   const prompt = samplePrompts.find((p) => p.id === id);
   
@@ -47,9 +58,10 @@ const PromptDetail = () => {
         <main className="py-12">
           <div className="container px-4 text-center">
             <h1 className="text-2xl font-bold mb-4">Prompt not found</h1>
-            <Link to="/browse" className="text-primary hover:underline">
-              Back to Browse
-            </Link>
+            <p className="text-muted-foreground mb-6">The prompt you're looking for doesn't exist or has been removed.</p>
+            <Button asChild>
+              <Link to="/browse">Browse All Prompts</Link>
+            </Button>
           </div>
         </main>
         <Footer />
@@ -59,7 +71,9 @@ const PromptDetail = () => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(prompt.promptText);
+    setCopied(true);
     toast.success("Prompt copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // Highlight variables in prompt text
@@ -79,7 +93,9 @@ const PromptDetail = () => {
 
   const relatedPrompts = samplePrompts
     .filter((p) => p.id !== prompt.id && p.category === prompt.category)
-    .slice(0, 3);
+    .slice(0, 4);
+
+  const category = categories.find(c => c.name === prompt.category);
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,13 +109,13 @@ const PromptDetail = () => {
             </Link>
             <ChevronRight className="h-4 w-4" />
             <Link 
-              to={`/browse?category=${prompt.category.toLowerCase().replace(/\s+/g, '-')}`} 
+              to={`/browse?category=${category?.id || ''}`} 
               className="hover:text-primary transition-colors"
             >
               {prompt.category}
             </Link>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-foreground">{prompt.title}</span>
+            <span className="text-foreground truncate max-w-[200px]">{prompt.title}</span>
           </nav>
 
           <div className="grid gap-8 lg:grid-cols-3">
@@ -115,7 +131,9 @@ const PromptDetail = () => {
                     {prompt.formatType.replace("-", " ")}
                   </Badge>
                   <Badge variant="outline">{prompt.aiModel}</Badge>
-                  <Badge variant="outline">{prompt.useCase}</Badge>
+                  <Badge variant="secondary" className="capitalize">
+                    {outputTypeIcons[prompt.outputType]} {prompt.outputType}
+                  </Badge>
                 </div>
                 
                 <h1 className="mb-4 text-3xl font-bold md:text-4xl">
@@ -131,7 +149,7 @@ const PromptDetail = () => {
                         className={`h-5 w-5 ${
                           i < prompt.rating
                             ? "fill-primary text-primary"
-                            : "text-muted-foreground"
+                            : "text-muted-foreground/30"
                         }`}
                       />
                     ))}
@@ -145,16 +163,64 @@ const PromptDetail = () => {
               {/* Prompt Text */}
               <div className="rounded-xl border border-border/50 bg-card p-6">
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="font-semibold">Prompt</h2>
-                  <Button onClick={handleCopy} className="gap-2">
-                    <Copy className="h-4 w-4" />
-                    Copy to Clipboard
+                  <h2 className="font-semibold text-lg">Prompt</h2>
+                  <Button onClick={handleCopy} className="gap-2" size="lg">
+                    {copied ? (
+                      <>
+                        <CheckCircle className="h-4 w-4" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        Copy to Clipboard
+                      </>
+                    )}
                   </Button>
                 </div>
-                <div className="rounded-lg bg-secondary/50 p-4 font-mono text-sm leading-relaxed">
+                <div className="rounded-lg bg-secondary/50 p-5 font-mono text-sm leading-relaxed border border-border/30">
                   {highlightVariables(prompt.promptText)}
                 </div>
               </div>
+
+              {/* How to Use */}
+              <div className="rounded-xl border border-border/50 bg-card p-6">
+                <h2 className="mb-4 font-semibold text-lg flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-primary" />
+                  How to Use This Prompt
+                </h2>
+                <ol className="space-y-3 text-muted-foreground">
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">1</span>
+                    <span>Copy the prompt using the button above</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">2</span>
+                    <span>Replace the [BRACKETED] placeholders with your specific information</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">3</span>
+                    <span>Paste into {prompt.aiModel} or your preferred AI tool</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">4</span>
+                    <span>Refine the output as needed for your specific use case</span>
+                  </li>
+                </ol>
+              </div>
+
+              {/* Example Output */}
+              {prompt.exampleOutput && (
+                <div className="rounded-xl border border-primary/30 bg-primary/5 p-6">
+                  <h2 className="mb-3 font-semibold text-lg flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    Example Output
+                  </h2>
+                  <div className="rounded-lg bg-card/80 p-4 text-sm text-muted-foreground whitespace-pre-wrap border border-border/30">
+                    {prompt.exampleOutput}
+                  </div>
+                </div>
+              )}
 
               {/* Notes */}
               {prompt.notes && (
@@ -181,14 +247,39 @@ const PromptDetail = () => {
               {/* Related Prompts */}
               {relatedPrompts.length > 0 && (
                 <div>
-                  <h2 className="mb-4 text-xl font-semibold">Related Prompts</h2>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">Related Prompts</h2>
+                    <Button asChild variant="ghost" size="sm">
+                      <Link to={`/browse?category=${category?.id}`}>
+                        View all
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
                     {relatedPrompts.map((related) => (
                       <Link
                         key={related.id}
                         to={`/prompts/${related.id}`}
-                        className="group rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-primary/30 hover:bg-card-hover"
+                        className="group rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-primary/30 hover:bg-card-hover hover:-translate-y-1"
                       >
+                        <div className="mb-2 flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {related.aiModel}
+                          </Badge>
+                          <div className="flex items-center gap-0.5 ml-auto">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3 w-3 ${
+                                  i < related.rating
+                                    ? "fill-primary text-primary"
+                                    : "text-muted-foreground/30"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
                         <h3 className="font-medium mb-2 group-hover:text-primary transition-colors line-clamp-1">
                           {related.title}
                         </h3>
@@ -249,6 +340,16 @@ const PromptDetail = () => {
                   </div>
 
                   <Separator />
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+                      <span className="text-sm">{outputTypeIcons[prompt.outputType]}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Output Type</p>
+                      <p className="text-sm font-medium capitalize">{prompt.outputType}</p>
+                    </div>
+                  </div>
 
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
