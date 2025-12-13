@@ -14,7 +14,187 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      custom_prompts: {
+        Row: {
+          ai_model: string
+          category: string
+          created_at: string
+          format_type: Database["public"]["Enums"]["format_type"]
+          id: string
+          notes: string | null
+          prompt_text: string
+          sub_category: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_model?: string
+          category: string
+          created_at?: string
+          format_type?: Database["public"]["Enums"]["format_type"]
+          id?: string
+          notes?: string | null
+          prompt_text: string
+          sub_category?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_model?: string
+          category?: string
+          created_at?: string
+          format_type?: Database["public"]["Enums"]["format_type"]
+          id?: string
+          notes?: string | null
+          prompt_text?: string
+          sub_category?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      prompts: {
+        Row: {
+          ai_model: string
+          category: string
+          created_at: string
+          format_type: Database["public"]["Enums"]["format_type"]
+          id: string
+          notes: string | null
+          priority: Database["public"]["Enums"]["prompt_priority"] | null
+          prompt_text: string
+          rating: number | null
+          source: string | null
+          status: Database["public"]["Enums"]["prompt_status"]
+          sub_category: string | null
+          title: string
+          updated_at: string
+          use_case: string | null
+        }
+        Insert: {
+          ai_model?: string
+          category: string
+          created_at?: string
+          format_type?: Database["public"]["Enums"]["format_type"]
+          id?: string
+          notes?: string | null
+          priority?: Database["public"]["Enums"]["prompt_priority"] | null
+          prompt_text: string
+          rating?: number | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["prompt_status"]
+          sub_category?: string | null
+          title: string
+          updated_at?: string
+          use_case?: string | null
+        }
+        Update: {
+          ai_model?: string
+          category?: string
+          created_at?: string
+          format_type?: Database["public"]["Enums"]["format_type"]
+          id?: string
+          notes?: string | null
+          priority?: Database["public"]["Enums"]["prompt_priority"] | null
+          prompt_text?: string
+          rating?: number | null
+          source?: string | null
+          status?: Database["public"]["Enums"]["prompt_status"]
+          sub_category?: string | null
+          title?: string
+          updated_at?: string
+          use_case?: string | null
+        }
+        Relationships: []
+      }
+      recently_used: {
+        Row: {
+          id: string
+          prompt_id: string
+          used_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          prompt_id: string
+          used_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          prompt_id?: string
+          used_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recently_used_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_prompts: {
+        Row: {
+          created_at: string
+          id: string
+          prompt_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_prompts_prompt_id_fkey"
+            columns: ["prompt_id"]
+            isOneToOne: false
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +203,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      format_type: "fill-in-the-blank" | "question-based" | "example-based"
+      prompt_priority: "high" | "medium" | "low"
+      prompt_status: "active" | "draft" | "archived" | "favorite"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +332,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      format_type: ["fill-in-the-blank", "question-based", "example-based"],
+      prompt_priority: ["high", "medium", "low"],
+      prompt_status: ["active", "draft", "archived", "favorite"],
+    },
   },
 } as const
