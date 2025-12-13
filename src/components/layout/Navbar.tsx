@@ -1,9 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
-import { Search, Compass, GraduationCap, Sparkles, FolderOpen, Menu } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Search, Compass, GraduationCap, Sparkles, FolderOpen, Menu, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { label: "Browse", href: "/browse", icon: Compass },
@@ -14,7 +16,14 @@ const navItems = [
 
 export function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const { user, loading, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -62,6 +71,39 @@ export function Navbar() {
             />
           </div>
 
+          {/* Auth Button */}
+          {!loading && (
+            <>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <User className="h-4 w-4" />
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem className="text-muted-foreground text-xs">
+                      {user.email}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button asChild variant="outline" size="sm" className="hidden sm:flex">
+                  <Link to="/auth">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Link>
+                </Button>
+              )}
+            </>
+          )}
+
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
@@ -97,6 +139,28 @@ export function Navbar() {
                     );
                   })}
                 </nav>
+
+                {/* Mobile Auth */}
+                <div className="border-t border-border pt-4 mt-2">
+                  {user ? (
+                    <div className="flex flex-col gap-2">
+                      <div className="px-4 py-2 text-sm text-muted-foreground">
+                        {user.email}
+                      </div>
+                      <Button variant="ghost" onClick={handleSignOut} className="justify-start">
+                        <LogOut className="h-5 w-5 mr-3" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button asChild variant="default" className="w-full">
+                      <Link to="/auth">
+                        <LogIn className="h-5 w-5 mr-2" />
+                        Sign In
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </div>
             </SheetContent>
           </Sheet>

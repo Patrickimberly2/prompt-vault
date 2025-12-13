@@ -3,12 +3,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import PromptDetail from "./pages/PromptDetail";
 import Learning from "./pages/Learning";
 import Workspace from "./pages/Workspace";
 import AIPartners from "./pages/AIPartners";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,16 +21,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/prompts/:id" element={<PromptDetail />} />
-          <Route path="/learning" element={<Learning />} />
-          <Route path="/workspace" element={<Workspace />} />
-          <Route path="/ai-partners" element={<AIPartners />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/prompts/:id" element={<PromptDetail />} />
+            <Route path="/learning" element={<Learning />} />
+            <Route path="/workspace" element={<Workspace />} />
+            <Route path="/ai-partners" element={<AIPartners />} />
+            <Route path="/auth" element={<Auth />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
