@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 const collections = [
   {
     id: "ultimate-bible",
-    name: "The Ultimate ChatGPT Bible",
+    name: "The Ultimate ChatGPT",
     description: "The most comprehensive collection of ChatGPT prompts covering every use case imaginable. From business to creative writing, marketing to coding - this collection has it all.",
     promptCount: 2500,
     categories: ["Marketing", "Business", "Creative", "Technical", "Personal"],
@@ -17,7 +17,7 @@ const collections = [
   },
   {
     id: "personal-growth",
-    name: "Personal Growth Bible",
+    name: "Personal Growth",
     description: "Transform every aspect of your life with AI-powered prompts for self-improvement, goal setting, habit building, and personal development journeys.",
     promptCount: 1800,
     categories: ["Mindset", "Goals", "Habits", "Wellness", "Productivity"],
@@ -27,7 +27,7 @@ const collections = [
   },
   {
     id: "business-bible",
-    name: "Business Owner's Bible",
+    name: "Business Owner's",
     description: "Scale your business with proven AI strategies. From startup ideation to enterprise growth, find prompts for every stage of your business journey.",
     promptCount: 2200,
     categories: ["Strategy", "Marketing", "Sales", "Operations", "Finance"],
@@ -37,7 +37,7 @@ const collections = [
   },
   {
     id: "coach-bible",
-    name: "Coach's Bible",
+    name: "Coach's",
     description: "Master the art of coaching and mentorship with prompts designed for life coaches, business coaches, and mentors who want to make a lasting impact.",
     promptCount: 1500,
     categories: ["Life Coaching", "Business Coaching", "Mentorship", "Leadership", "Communication"],
