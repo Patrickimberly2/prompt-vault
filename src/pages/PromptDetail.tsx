@@ -12,7 +12,8 @@ import {
   FileText,
   CheckCircle,
   Lightbulb,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -20,9 +21,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { samplePrompts, categories } from "@/data/mockData";
+import { categories } from "@/data/mockData";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Prompt = Tables<"prompts">;
 
 const formatBadgeColors: Record<string, string> = {
   "fill-in-blank": "bg-primary/20 text-primary border-primary/30",
@@ -48,8 +53,60 @@ const PromptDetail = () => {
   const { id } = useParams();
   const [notes, setNotes] = useState("");
   const [copied, setCopied] = useState(false);
-  
-  const prompt = samplePrompts.find((p) => p.id === id);
+  const [prompt, setPrompt] = useState<Prompt | null>(null);
+  const [relatedPrompts, setRelatedPrompts] = useState<Prompt[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPrompt = async () => {
+      if (!id) return;
+      
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("prompts")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error fetching prompt:", error);
+        setLoading(false);
+        return;
+      }
+
+      setPrompt(data);
+
+      // Fetch related prompts
+      if (data?.category) {
+        const { data: related } = await supabase
+          .from("prompts")
+          .select("*")
+          .eq("category", data.category)
+          .neq("id", id)
+          .limit(4);
+        
+        setRelatedPrompts(related || []);
+      }
+      
+      setLoading(false);
+    };
+
+    fetchPrompt();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="py-12">
+          <div className="container px-4 flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   
   if (!prompt) {
     return (
@@ -70,7 +127,7 @@ const PromptDetail = () => {
   }
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(prompt.promptText);
+    navigator.clipboard.writeText(prompt.prompt_text);
     setCopied(true);
     toast.success("Prompt copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
@@ -90,10 +147,6 @@ const PromptDetail = () => {
       return part;
     });
   };
-
-  const relatedPrompts = samplePrompts
-    .filter((p) => p.id !== prompt.id && p.category === prompt.category)
-    .slice(0, 4);
 
   const category = categories.find(c => c.name === prompt.category);
 
@@ -126,13 +179,13 @@ const PromptDetail = () => {
                 <div className="mb-4 flex flex-wrap items-center gap-2">
                   <Badge
                     variant="outline"
-                    className={`${formatBadgeColors[prompt.formatType]}`}
+                    className={`${formatBadgeColors[prompt.format_type] || ""}`}
                   >
-                    {prompt.formatType.replace("-", " ")}
+                    {prompt.format_type.replace("-", " ")}
                   </Badge>
-                  <Badge variant="outline">{prompt.aiModel}</Badge>
+                  <Badge variant="outline">{prompt.ai_model}</Badge>
                   <Badge variant="secondary" className="capitalize">
-                    {outputTypeIcons[prompt.outputType]} {prompt.outputType}
+                    📝 text
                   </Badge>
                 </div>
                 
@@ -147,7 +200,7 @@ const PromptDetail = () => {
                       <Star
                         key={i}
                         className={`h-5 w-5 ${
-                          i < prompt.rating
+                          i < (prompt.rating || 0)
                             ? "fill-primary text-primary"
                             : "text-muted-foreground/30"
                         }`}
@@ -155,7 +208,7 @@ const PromptDetail = () => {
                     ))}
                   </div>
                   <span className="text-muted-foreground">
-                    ({prompt.rating}/5)
+                    ({prompt.rating || 0}/5)
                   </span>
                 </div>
               </div>
@@ -179,7 +232,7 @@ const PromptDetail = () => {
                   </Button>
                 </div>
                 <div className="rounded-lg bg-secondary/50 p-5 font-mono text-sm leading-relaxed border border-border/30">
-                  {highlightVariables(prompt.promptText)}
+                  {highlightVariables(prompt.prompt_text)}
                 </div>
               </div>
 
@@ -200,7 +253,7 @@ const PromptDetail = () => {
                   </li>
                   <li className="flex gap-3">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">3</span>
-                    <span>Paste into {prompt.aiModel} or your preferred AI tool</span>
+                    <span>Paste into {prompt.ai_model} or your preferred AI tool</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-sm font-medium">4</span>
@@ -209,15 +262,15 @@ const PromptDetail = () => {
                 </ol>
               </div>
 
-              {/* Example Output */}
-              {prompt.exampleOutput && (
+              {/* Use Case */}
+              {prompt.use_case && (
                 <div className="rounded-xl border border-primary/30 bg-primary/5 p-6">
                   <h2 className="mb-3 font-semibold text-lg flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-primary" />
-                    Example Output
+                    <Target className="h-5 w-5 text-primary" />
+                    Use Case
                   </h2>
                   <div className="rounded-lg bg-card/80 p-4 text-sm text-muted-foreground whitespace-pre-wrap border border-border/30">
-                    {prompt.exampleOutput}
+                    {prompt.use_case}
                   </div>
                 </div>
               )}
@@ -265,14 +318,14 @@ const PromptDetail = () => {
                       >
                         <div className="mb-2 flex items-center gap-2">
                           <Badge variant="secondary" className="text-xs">
-                            {related.aiModel}
+                            {related.ai_model}
                           </Badge>
                           <div className="flex items-center gap-0.5 ml-auto">
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
                                 className={`h-3 w-3 ${
-                                  i < related.rating
+                                  i < (related.rating || 0)
                                     ? "fill-primary text-primary"
                                     : "text-muted-foreground/30"
                                 }`}
@@ -284,7 +337,7 @@ const PromptDetail = () => {
                           {related.title}
                         </h3>
                         <p className="text-sm text-muted-foreground line-clamp-2">
-                          {related.promptText.substring(0, 80)}...
+                          {related.prompt_text.substring(0, 80)}...
                         </p>
                       </Link>
                     ))}
@@ -315,7 +368,7 @@ const PromptDetail = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Sub-category</p>
-                      <p className="text-sm font-medium">{prompt.subCategory}</p>
+                      <p className="text-sm font-medium">{prompt.sub_category || "N/A"}</p>
                     </div>
                   </div>
 
@@ -325,7 +378,7 @@ const PromptDetail = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">AI Model</p>
-                      <p className="text-sm font-medium">{prompt.aiModel}</p>
+                      <p className="text-sm font-medium">{prompt.ai_model}</p>
                     </div>
                   </div>
 
@@ -335,7 +388,7 @@ const PromptDetail = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Use Case</p>
-                      <p className="text-sm font-medium">{prompt.useCase}</p>
+                      <p className="text-sm font-medium">{prompt.use_case || "N/A"}</p>
                     </div>
                   </div>
 
@@ -343,22 +396,22 @@ const PromptDetail = () => {
 
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-                      <span className="text-sm">{outputTypeIcons[prompt.outputType]}</span>
+                      <span className="text-sm">📝</span>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Output Type</p>
-                      <p className="text-sm font-medium capitalize">{prompt.outputType}</p>
+                      <p className="text-sm font-medium capitalize">Text</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-                      <Flag className={`h-4 w-4 ${priorityColors[prompt.priority]}`} />
+                      <Flag className={`h-4 w-4 ${priorityColors[prompt.priority || "medium"]}`} />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Priority</p>
-                      <p className={`text-sm font-medium capitalize ${priorityColors[prompt.priority]}`}>
-                        {prompt.priority}
+                      <p className={`text-sm font-medium capitalize ${priorityColors[prompt.priority || "medium"]}`}>
+                        {prompt.priority || "medium"}
                       </p>
                     </div>
                   </div>
@@ -369,7 +422,7 @@ const PromptDetail = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Last Updated</p>
-                      <p className="text-sm font-medium">{prompt.updatedAt}</p>
+                      <p className="text-sm font-medium">{new Date(prompt.updated_at).toLocaleDateString()}</p>
                     </div>
                   </div>
                 </div>
