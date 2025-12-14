@@ -19,6 +19,7 @@ import PromptBible from "./pages/PromptBible"; // <--- ADD THIS IMPORT
 
 const queryClient = new QueryClient();
 
+// App component with router context
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
