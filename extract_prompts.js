@@ -3,8 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
-// --- FIX FOR THE ERROR IS HERE ---
-// We create a 'require' tool to load the pdf-parse library correctly
+// --- FIX 1: Fixes the "export named default" crash ---
 const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse'); 
 
@@ -12,9 +11,8 @@ const pdf = require('pdf-parse');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- CONFIGURATION ---
-// This looks for a folder named "pdfs" inside your project directory
-const pdfFolderPath = path.join(__dirname, 'pdfs');
+// --- FIX 2: Matches your specific folder name "PDF_files" ---
+const pdfFolderPath = path.join(__dirname, 'PDF_files');
 const outputFilePath = path.join(__dirname, 'src', 'data', 'prompts.json');
 
 const files = [
@@ -27,11 +25,9 @@ const files = [
 async function extractPrompts() {
     console.log("Starting extraction...");
     
-    // Check if pdfs folder exists
+    // Check if folder exists
     if (!fs.existsSync(pdfFolderPath)) {
-        console.error(`❌ ERROR: Could not find the 'pdfs' folder.`);
-        console.error(`Please create a folder named 'pdfs' in this directory: ${__dirname}`);
-        console.error(`And move your 4 PDF files into it.`);
+        console.error(`❌ ERROR: Could not find the folder at: ${pdfFolderPath}`);
         return;
     }
 
