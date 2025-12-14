@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import pdf from 'pdf-parse';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module'; // 1. Import helper
+
+// 2. Create a 'require' function to load the older library
+const require = createRequire(import.meta.url);
+const pdf = require('pdf-parse'); 
 
 // --- CONFIGURATION ---
 // Update this path to where your PDFs are actually located on your computer
