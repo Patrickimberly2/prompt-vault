@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { 
   Search, 
@@ -7,7 +7,8 @@ import {
   Star, 
   ChevronDown, 
   X,
-  SlidersHorizontal 
+  SlidersHorizontal,
+  Loader2
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -28,14 +29,30 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { 
-  samplePrompts, 
   categories, 
   formatTypes, 
   aiModels,
   outputTypes,
   vaults,
 } from "@/data/mockData";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+interface Prompt {
+  id: string;
+  title: string;
+  prompt_text: string;
+  category: string;
+  sub_category: string | null;
+  ai_model: string;
+  format_type: string;
+  rating: number | null;
+  use_case: string | null;
+  notes: string | null;
+  source: string | null;
+  status: string;
+  priority: string | null;
+}
 
 const formatBadgeColors: Record<string, string> = {
   "fill-in-blank": "bg-primary/20 text-primary border-primary/30",
@@ -59,6 +76,8 @@ const Browse = () => {
   const vaultFilter = collectionParam ? vaults.find(v => v.id === collectionParam) : null;
   const vaultName = vaultFilter?.name || null;
   
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedFilters, setSelectedFilters] = useState<{
     categories: string[];
@@ -73,6 +92,27 @@ const Browse = () => {
     outputTypes: [],
     ratings: [],
   });
+
+  // Fetch prompts from Supabase
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching prompts:', error);
+        toast.error('Failed to load prompts');
+      } else {
+        setPrompts(data || []);
+      }
+      setLoading(false);
+    };
+
+    fetchPrompts();
+  }, []);
 
   const handleCopy = (text: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -105,7 +145,7 @@ const Browse = () => {
 
   // Filter prompts based on selected filters and vault
   const filteredPrompts = useMemo(() => {
-    return samplePrompts.filter((prompt) => {
+    return prompts.filter((prompt) => {
       // Vault filter - filter by categories associated with the vault
       if (vaultFilter) {
         if (!vaultFilter.categories.includes(prompt.category)) return false;
@@ -116,7 +156,7 @@ const Browse = () => {
         const query = searchQuery.toLowerCase();
         const matchesSearch = 
           prompt.title.toLowerCase().includes(query) ||
-          prompt.promptText.toLowerCase().includes(query) ||
+          prompt.prompt_text.toLowerCase().includes(query) ||
           prompt.category.toLowerCase().includes(query);
         if (!matchesSearch) return false;
       }
@@ -129,28 +169,23 @@ const Browse = () => {
 
       // Format filter
       if (selectedFilters.formats.length > 0) {
-        if (!selectedFilters.formats.includes(prompt.formatType)) return false;
+        if (!selectedFilters.formats.includes(prompt.format_type)) return false;
       }
 
       // AI Model filter
       if (selectedFilters.models.length > 0) {
-        if (!selectedFilters.models.includes(prompt.aiModel)) return false;
-      }
-
-      // Output Type filter
-      if (selectedFilters.outputTypes.length > 0) {
-        if (!selectedFilters.outputTypes.includes(prompt.outputType)) return false;
+        if (!selectedFilters.models.includes(prompt.ai_model)) return false;
       }
 
       // Rating filter
       if (selectedFilters.ratings.length > 0) {
         const minRating = Math.min(...selectedFilters.ratings.map(Number));
-        if (prompt.rating < minRating) return false;
+        if ((prompt.rating || 0) < minRating) return false;
       }
 
       return true;
     });
-  }, [searchQuery, selectedFilters, vaultFilter]);
+  }, [prompts, searchQuery, selectedFilters, vaultFilter]);
 
   const FilterSection = ({ title, items, type, showIcon = false }: {
     title: string;
@@ -357,10 +392,14 @@ const Browse = () => {
             {/* Prompt Grid */}
             <div className="flex-1">
               <div className="mb-4 text-sm text-muted-foreground">
-                Showing {filteredPrompts.length} of {samplePrompts.length} prompts
+                Showing {filteredPrompts.length} of {prompts.length} prompts
               </div>
 
-              {filteredPrompts.length === 0 ? (
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : filteredPrompts.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-lg text-muted-foreground mb-4">No prompts found matching your filters</p>
                   <Button onClick={clearFilters} variant="outline">
@@ -381,15 +420,12 @@ const Browse = () => {
                           <div className="mb-2 flex flex-wrap items-center gap-2">
                             <Badge
                               variant="outline"
-                              className={`text-xs ${formatBadgeColors[prompt.formatType]}`}
+                              className={`text-xs ${formatBadgeColors[prompt.format_type] || ''}`}
                             >
-                              {prompt.formatType.replace("-", " ")}
+                              {prompt.format_type.replace("-", " ")}
                             </Badge>
                             <Badge variant="outline" className="text-xs">
-                              {prompt.aiModel}
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs capitalize">
-                              {prompt.outputType}
+                              {prompt.ai_model}
                             </Badge>
                           </div>
                           <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-1">
@@ -401,7 +437,7 @@ const Browse = () => {
                             <Star
                               key={i}
                               className={`h-3.5 w-3.5 ${
-                                i < prompt.rating
+                                i < (prompt.rating || 0)
                                   ? "fill-primary text-primary"
                                   : "text-muted-foreground/30"
                               }`}
@@ -412,7 +448,7 @@ const Browse = () => {
 
                       {/* Preview */}
                       <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-                        {prompt.promptText.substring(0, 120)}...
+                        {prompt.prompt_text.substring(0, 120)}...
                       </p>
 
                       {/* Footer */}
@@ -424,7 +460,7 @@ const Browse = () => {
                           size="sm"
                           variant="ghost"
                           className="h-7 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => handleCopy(prompt.promptText, e)}
+                          onClick={(e) => handleCopy(prompt.prompt_text, e)}
                         >
                           <Copy className="h-3 w-3 mr-1" />
                           Copy
