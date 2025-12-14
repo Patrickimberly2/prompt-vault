@@ -33,6 +33,7 @@ import {
   formatTypes, 
   aiModels,
   outputTypes,
+  vaults,
 } from "@/data/mockData";
 import { toast } from "sonner";
 
@@ -52,6 +53,11 @@ const Browse = () => {
   const [searchParams] = useSearchParams();
   const initialSearch = searchParams.get("search") || "";
   const initialCategory = searchParams.get("category");
+  const collectionParam = searchParams.get("collection");
+  
+  // Get vault categories if collection param is present
+  const vaultFilter = collectionParam ? vaults.find(v => v.id === collectionParam) : null;
+  const vaultName = vaultFilter?.name || null;
   
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedFilters, setSelectedFilters] = useState<{
@@ -97,9 +103,14 @@ const Browse = () => {
 
   const activeFilterCount = Object.values(selectedFilters).flat().length;
 
-  // Filter prompts based on selected filters
+  // Filter prompts based on selected filters and vault
   const filteredPrompts = useMemo(() => {
     return samplePrompts.filter((prompt) => {
+      // Vault filter - filter by categories associated with the vault
+      if (vaultFilter) {
+        if (!vaultFilter.categories.includes(prompt.category)) return false;
+      }
+
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -139,7 +150,7 @@ const Browse = () => {
 
       return true;
     });
-  }, [searchQuery, selectedFilters]);
+  }, [searchQuery, selectedFilters, vaultFilter]);
 
   const FilterSection = ({ title, items, type, showIcon = false }: {
     title: string;
@@ -230,9 +241,18 @@ const Browse = () => {
         <div className="container px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="mb-2 text-3xl font-bold">Browse <span className="gradient-text">Prompts</span></h1>
+            <h1 className="mb-2 text-3xl font-bold">
+              {vaultName ? (
+                <>Browse <span className="gradient-text">{vaultName}</span></>
+              ) : (
+                <>Browse <span className="gradient-text">Prompts</span></>
+              )}
+            </h1>
             <p className="text-muted-foreground">
-              Discover and filter through 20,000+ AI prompts across {categories.length} functional categories
+              {vaultName 
+                ? `${filteredPrompts.length} prompts in ${vaultName}` 
+                : `Discover and filter through 20,000+ AI prompts across ${categories.length} functional categories`
+              }
             </p>
           </div>
 
