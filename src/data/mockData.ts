@@ -93,6 +93,40 @@ export const aiModels = [
 
 export const useCases = ["Business", "Creative", "Learning", "Technical", "Personal", "Marketing", "Writing"];
 
+// Vault definitions - maps vault IDs to their associated functional categories
+export const vaults = [
+  { 
+    id: "business-vault", 
+    name: "Business Vault",
+    categories: ["Business Strategy & Planning", "Operations & Process", "Finance & Budgeting", "Product Development & Innovation", "HR & Talent Management"]
+  },
+  { 
+    id: "marketing-vault", 
+    name: "Marketing Vault",
+    categories: ["Marketing & Advertising", "SEO & Content Strategy", "Design & Visual Content"]
+  },
+  { 
+    id: "sales-vault", 
+    name: "Sales Vault",
+    categories: ["Sales & Lead Generation", "Customer Service & Support"]
+  },
+  { 
+    id: "content-vault", 
+    name: "Content Creation Vault",
+    categories: ["Social Media Management", "Email & Copywriting", "Creative Writing & Storytelling", "Professional Writing & Communication"]
+  },
+  { 
+    id: "coaching-vault", 
+    name: "Coaching Vault",
+    categories: ["Personal Development & Coaching", "Learning & Education"]
+  },
+  { 
+    id: "personal-growth-vault", 
+    name: "Personal Growth Vault",
+    categories: ["Personal Development & Coaching", "Productivity & Time Management"]
+  },
+];
+
 // 300+ prompts across all categories
 export const samplePrompts: Prompt[] = [
   // ============ SOCIAL MEDIA (60+ prompts) ============
