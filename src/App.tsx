@@ -14,6 +14,7 @@ import Challenge from "./pages/Challenge";
 import Workspace from "./pages/Workspace";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import SeedDatabase from "./pages/SeedDatabase";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/challenge" element={<Challenge />} />
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/seed" element={<SeedDatabase />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
