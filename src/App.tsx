@@ -15,6 +15,7 @@ import Workspace from "./pages/Workspace";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import SeedDatabase from "./pages/SeedDatabase";
+import PromptBible from "./pages/PromptBible"; // <--- ADD THIS IMPORT
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/workspace" element={<Workspace />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/seed" element={<SeedDatabase />} />
+            <Route path="/bible" element={<PromptBible />} /> {/* <--- ADD THIS ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
