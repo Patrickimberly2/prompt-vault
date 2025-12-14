@@ -1,18 +1,21 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module'; // 1. Import helper
+import { createRequire } from 'module';
 
-// 2. Create a 'require' function to load the older library
+// --- FIX FOR THE ERROR IS HERE ---
+// We create a 'require' tool to load the pdf-parse library correctly
 const require = createRequire(import.meta.url);
 const pdf = require('pdf-parse'); 
 
-// --- CONFIGURATION ---
-// Update this path to where your PDFs are actually located on your computer
-const pdfFolderPath = "C:\\Users\\KLHst\\Downloads\\PDF_files"; 
+// Get current folder path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// This saves the file directly into your source code data folder
-const outputFilePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'src', 'data', 'prompts.json');
+// --- CONFIGURATION ---
+// This looks for a folder named "pdfs" inside your project directory
+const pdfFolderPath = path.join(__dirname, 'pdfs');
+const outputFilePath = path.join(__dirname, 'src', 'data', 'prompts.json');
 
 const files = [
     { category: "Personal Growth", filename: "The Personal Growth Bible to ChatGPT.pdf" },
@@ -23,6 +26,15 @@ const files = [
 
 async function extractPrompts() {
     console.log("Starting extraction...");
+    
+    // Check if pdfs folder exists
+    if (!fs.existsSync(pdfFolderPath)) {
+        console.error(`❌ ERROR: Could not find the 'pdfs' folder.`);
+        console.error(`Please create a folder named 'pdfs' in this directory: ${__dirname}`);
+        console.error(`And move your 4 PDF files into it.`);
+        return;
+    }
+
     const allData = [];
 
     // Ensure src/data exists
