@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, Compass, GraduationCap, Wrench, FolderOpen, Menu, LogIn, LogOut, User, Library } from "lucide-react";
+import { Search, Compass, GraduationCap, Wrench, FolderOpen, Menu, LogIn, LogOut, User, Library, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const navItems = [
   { label: "Browse", href: "/browse", icon: Compass },
   { label: "Vaults", href: "/collections", icon: Library },
+  { label: "Prompt Bible", href: "/bible", icon: Book },
   { label: "AI Tools", href: "/ai-tools", icon: Wrench },
   { label: "Learning", href: "/learning", icon: GraduationCap },
   { label: "Workspace", href: "/workspace", icon: FolderOpen },
